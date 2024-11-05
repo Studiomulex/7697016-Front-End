@@ -42,14 +42,27 @@ main {
 	text-align: center;
 }
 
-.fiches {
+.fiches{
 	flex: 1;
 	margin: 8px;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 4px;
+	background-color: bisque;
 }
-.fiches img {
-	max-width: 200px;
+.fiches div {
+	border: 1px solid black;
+	padding: 4px;
+	background-color:yellow;
+}
+.fiches  img {
+	display: block;
+	width: 100px;
 }
 .fiches p {
 	margin-top: 4px;
 	margin-bottom: 4px;
+}
+.fiches article h2 {
+	text-align: center;
 }
