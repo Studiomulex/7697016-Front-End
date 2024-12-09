@@ -30,7 +30,7 @@ await afficherArticles(); // S'assurer que les articles sont chargés avant de c
 function genererPieces(pieces) {
   pieces.forEach(
     ({ image, nom, prix, categorie, description, disponibilite }) => {
-      sectionFiches.innerHTML+= `
+      sectionFiches.innerHTML += `
      <div>
       <img src="${image}" alt="${nom}">
       <h2>${nom}</h2>
@@ -90,3 +90,19 @@ noms.forEach((nom) => {
 });
 
 document.querySelector(".abordables").appendChild(abordableElem);
+
+const disponibles = pieces
+  .filter(piece => piece.disponibilite) // Filtre uniquement les pièces disponibles
+  .map(piece => `${piece.nom} - ${piece.prix} €`); // Transforme en format "nom - prix"
+
+const elemDispo = document.createElement("ul");
+disponibles.forEach(item => {
+  const nomElement = document.createElement("li");
+  nomElement.innerText = item;
+  elemDispo.appendChild(nomElement);
+});
+
+const pElementDisponible = document.createElement("p");
+pElementDisponible.innerText = "Pièces disponibles:";
+document.querySelector(".disponibles").appendChild(pElementDisponible);
+pElementDisponible.appendChild(elemDispo);
