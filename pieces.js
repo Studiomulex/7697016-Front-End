@@ -1,11 +1,12 @@
 const sectionFiches = document.querySelector(".fiches");
-
+let pieces=[]
 //recupération des éléments
 const afficherArticles = async () => {
   const response = await fetch("pieces-autos.json");
-  const pieces = await response.json();
+  pieces = await response.json();
 
   //affichage de tous les éléments de la pieces-auto.json
+  sectionFiches.innerHTML = "";
   pieces.forEach(
     ({ image, nom, prix, categorie, disponibilite, description }) => {
       sectionFiches.innerHTML += `
@@ -22,20 +23,38 @@ const afficherArticles = async () => {
   );
 };
 afficherArticles();
-
-// bouton de tri
+//gestion des bouttons
 const boutonTrier = document.querySelector(".btn-trier");
 boutonTrier.addEventListener("click", function () {
-  pieces.sort(function (a, b) {
+  const piecesOrdonnees = Array.from(pieces);
+  piecesOrdonnees.sort(function (a, b) {
     return a.prix - b.prix;
   });
-  console.log(pieces);
+  console.log(piecesOrdonnees);
 });
 
-//btn de filtrage
 const boutonFiltrer = document.querySelector(".btn-filtrer");
-boutonFiltrer.addEventListener("click", () => {
-  const filteredPieces = pieces.filter((piece) => {
-    return piece.prix<=35;
+boutonFiltrer.addEventListener("click", function () {
+  const piecesFiltrees = pieces.filter(function (piece) {
+    return piece.prix <= 35;
   });
+  console.log(piecesFiltrees);
+});
+
+//Correction Exercice
+const boutonDecroissant = document.querySelector(".btn-decroissant");
+boutonDecroissant.addEventListener("click", function () {
+  const piecesOrdonnees = Array.from(pieces);
+  piecesOrdonnees.sort(function (a, b) {
+    return b.prix - a.prix;
+  });
+  console.log(piecesOrdonnees);
+});
+
+const boutonNoDescription = document.querySelector(".btn-nodesc");
+boutonNoDescription.addEventListener("click", function () {
+  const piecesFiltrees = pieces.filter(function (piece) {
+    return piece.description;
+  });
+  console.log(piecesFiltrees);
 });
