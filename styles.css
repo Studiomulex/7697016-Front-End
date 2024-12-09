@@ -48,7 +48,6 @@ main {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	gap: 4px;
-	background-color: bisque;
 }
 .fiches div {
 	border: 1px solid black;
