@@ -3,7 +3,9 @@ export async function fetchAvis(id) {
   try {
     const response = await fetch(`http://localhost:8081/pieces/${id}/avis`);
     if (!response.ok) {
-      throw new Error(`Erreur HTTP: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Erreur HTTP: ${response.status} - ${response.statusText}`
+      );
     }
     return await response.json();
   } catch (error) {
@@ -25,7 +27,7 @@ export function ajoutListenersAvis() {
 
       const pieceElement = event.target.parentElement;
       const avisContainer = pieceElement.querySelector(".avis");
-// cacher les avis si ils sont affiche
+      // cacher les avis si ils sont affiche
       if (avisContainer) {
         avisContainer.remove();
         button.textContent = "Afficher les commentaires";
@@ -38,14 +40,22 @@ export function ajoutListenersAvis() {
 
         const avisElement = document.createElement("div");
         avisElement.classList.add("avis");
-
-        avisElement.innerHTML = avis.length
-          ? avis
-              .map(
-                (a) => `<p><strong>${a.utilisateur}</strong>: ${a.commentaire}</p>`
-              )
-              .join("")
-          : "<p>Aucun avis pour ce produit.</p>";
+        const avisFiltres = avis.filter(
+          (a) => (a.utilisateur || a.user) && (a.commentaire || a.comment)
+        );
+        avisElement.innerHTML =
+          avisFiltres.length > 0
+            ? avisFiltres
+                .map(
+                  (a) =>
+                    `<p><strong>${
+                      a.utilisateur || a.user || "Anonyme"
+                    }</strong>: ${
+                      a.commentaire || a.comment || "Aucun commentaire"
+                    }</p>`
+                )
+                .join("")
+            : "<p>Aucun avis valide pour ce produit.</p>";
 
         pieceElement.appendChild(avisElement);
         button.textContent = "Cacher les commentaires";
@@ -79,11 +89,13 @@ export function ajoutListenersEnvoyerAvis() {
       });
 
       if (!response.ok) {
-        throw new Error(`Erreur HTTP: ${response.status} - ${response.statusText}`);
+        throw new Error(
+          `Erreur HTTP: ${response.status} - ${response.statusText}`
+        );
       }
 
       alert("Avis envoyé avec succès !");
-      event.target.reset();//nettoie le formulaire
+      event.target.reset(); //nettoie le formulaire
     } catch (error) {
       console.error("Erreur lors de l'envoi de l'avis:", error);
     }
