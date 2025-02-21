@@ -3,7 +3,7 @@ export async function fetchAvis(id) {
     const response = await fetch(`http://localhost:8081/pieces/${id}/avis`, {
       method: "POST",
       headers: { "content-Type": "application/json" },
-      body: '{"Commentaires":"Top produit !"}'
+      body: '{"Commentaires":"Top produit !"}',
     });
     if (!response.ok) {
       throw new Error(
@@ -16,19 +16,25 @@ export async function fetchAvis(id) {
     throw error;
   }
 }
- //  fonction pour publier de nous avis
- export function ajoutListenersEnvoyerAvis(){
- try{
-  const formulaireAvis=document.querySelector('.formulaire-avis')
-  formulaireAvis.addEventListener("submit",function(event){
-    event.preventDefault()
-    // const 
-  })
- }catch(error){
-  console.log(error)
- }
- }
- //fonction pour afficher et cacher les avis
+//  fonction pour publier de nouveaux avis
+export function ajoutListenersEnvoyerAvis() {
+  try {
+    const formulaireAvis = document.querySelector(".formulaire-avis");
+    formulaireAvis.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      // Création de l’objet du nouvel avis.
+      const avis = {
+        pieceId: parseInt(event.target.querySelector("[name=piece-id]").value),
+        utilisateur: event.target.querySelector("[name=utilisateur]").value,
+        commentaire: event.target.querySelector("[name=commentaire]").value,
+      };
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+//fonction pour afficher et cacher les avis
 export function ajoutListenersAvis() {
   const buttons = document.querySelectorAll(".fiches .produit button");
 
