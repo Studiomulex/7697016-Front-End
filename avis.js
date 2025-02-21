@@ -16,32 +16,6 @@ export async function fetchAvis(id) {
     throw error;
   }
 }
-//  fonction pour publier de nouveaux avis
-export function ajoutListenersEnvoyerAvis() {
-  try {
-    const formulaireAvis = document.querySelector(".formulaire-avis");
-    formulaireAvis.addEventListener("submit", function (event) {
-      event.preventDefault();
-
-      // Création de l’objet du nouvel avis.
-      const avis = {
-        pieceId: parseInt(event.target.querySelector("[name=piece-id]").value),
-        utilisateur: event.target.querySelector("[name=utilisateur]").value,
-        commentaire: event.target.querySelector("[name=commentaire]").value,
-      };
-      // Création de la charge utile au format JSON pour le recuperer via body de method post
-      const chargeUtile = JSON.stringify(avis);
-      //  appel de fetch avec toutes les infos necessaires
-      fetch("http://localhost:8081/avis", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: chargeUtile,
-      });
-    });
-  } catch (error) {
-    console.log(error);
-  }
-}
 //fonction pour afficher et cacher les avis
 export function ajoutListenersAvis() {
   const buttons = document.querySelectorAll(".fiches .produit button");
@@ -88,4 +62,44 @@ export function ajoutListenersAvis() {
       }
     });
   });
+}
+
+//  fonction pour publier de nouveaux avis
+export function ajoutListenersEnvoyerAvis() {
+  try {
+    const formulaireAvis = document.querySelector(".formulaire-avis");
+    formulaireAvis.addEventListener("submit", async function (event) {
+      // Ajout de `async`
+      event.preventDefault();
+
+      const avis = {
+        pieceId: parseInt(event.target.querySelector("[name=piece-id]").value),
+        utilisateur: event.target.querySelector("[name=utilisateur]").value,
+        commentaire: event.target.querySelector("[name=commentaire]").value,
+      };
+   //transforme mes avis en format json et on le lie au body
+      const chargeUtile = JSON.stringify(avis);
+
+      try {
+        const response = await fetch("http://localhost:8081/avis", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: chargeUtile,
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            `Erreur HTTP: ${response.status} - ${response.statusText}`
+          );
+        }
+
+        alert("Avis envoyé avec succès !");
+        event.target.reset(); // Réinitialisation du formulaire après envoi
+      } catch (error) {
+        console.error("Erreur lors de l'envoi de l'avis:", error);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
 }
