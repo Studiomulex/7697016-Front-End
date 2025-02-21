@@ -1,4 +1,4 @@
-import { ajoutListenersAvis } from "./avis.js";
+import { ajoutListenersAvis,ajoutListenersEnvoyerAvis } from "./avis.js";
 
 async function fetchingData() {
   try {
@@ -7,7 +7,7 @@ async function fetchingData() {
       throw new Error(`HTTP Erreur: ${response.status}`);
     }
     const datas = await response.json();
-
+    ajoutListenersEnvoyerAvis()
     const listeProduits = document.querySelector(".fiches");
     if (!listeProduits) {
       throw new Error("L'élément '.fiches' n'existe pas dans le DOM");

@@ -16,14 +16,20 @@ export async function fetchAvis(id) {
     throw error;
   }
 }
-
-export function ajoutListenersAvis() {
-  // code formulaire recuperation des commentaires
-  const formulaireAVis=document.querySelector('.formulaire-avis')
-  formulaireAVis.addEventListener('submit',function(event){
+ //  fonction pour publier de nous avis
+ export function ajoutListenersEnvoyerAvis(){
+ try{
+  const formulaireAvis=document.querySelector('.formulaire-avis')
+  formulaireAvis.addEventListener("submit",function(event){
     event.preventDefault()
-
+    // const 
   })
+ }catch(error){
+  console.log(error)
+ }
+ }
+ //fonction pour afficher et cacher les avis
+export function ajoutListenersAvis() {
   const buttons = document.querySelectorAll(".fiches .produit button");
 
   buttons.forEach((button) => {
@@ -40,7 +46,6 @@ export function ajoutListenersAvis() {
         button.textContent = "Afficher les commentaires";
         return; // Stoppe la fonction ici
       }
-
       try {
         const id = event.target.dataset.id;
         const avis = await fetchAvis(id);
