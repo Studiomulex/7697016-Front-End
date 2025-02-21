@@ -29,6 +29,8 @@ export function ajoutListenersEnvoyerAvis() {
         utilisateur: event.target.querySelector("[name=utilisateur]").value,
         commentaire: event.target.querySelector("[name=commentaire]").value,
       };
+      // Création de la charge utile au format JSON
+     const chargeUtile = JSON.stringify(avis);
     });
   } catch (error) {
     console.log(error);
