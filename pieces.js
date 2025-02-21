@@ -1,14 +1,15 @@
-import { ajoutListenersAvis,ajoutListenersEnvoyerAvis } from "./avis.js";
+import { ajoutListenersAvis, ajoutListenersEnvoyerAvis } from "./avis.js";
 
+// Fonction pour récupérer les données des pièces
 async function fetchingData() {
   try {
-    const response = await fetch('http://localhost:8081/pieces/');
+    const response = await fetch("http://localhost:8081/pieces/");
     if (!response.ok) {
       throw new Error(`HTTP Erreur: ${response.status}`);
     }
     const datas = await response.json();
-    ajoutListenersEnvoyerAvis()
     const listeProduits = document.querySelector(".fiches");
+
     if (!listeProduits) {
       throw new Error("L'élément '.fiches' n'existe pas dans le DOM");
     }
@@ -20,20 +21,20 @@ async function fetchingData() {
       produits.forEach((data) => {
         listeProduits.innerHTML += `
           <div class="produit">
-            <img src="${data.image}" alt="${data.nom}">
+            <img src="${data.image}" alt="${data.nom}" />
             <h2>${data.nom}</h2>
             <h3>Prix: ${data.prix} €</h3>
-            <p> Catégorie: ${data.categorie ?? "aucune catégorie"}</p>
-            <p> Disponibilité: ${
+            <p>Catégorie: ${data.categorie ?? "Aucune catégorie"}</p>
+            <p>Disponibilité: ${
               data.disponibilite ? "En stock" : "Rupture de stock"
             }</p>
-            <p>${data.description ?? "no description"}</p>
-            <button data-id="${data.id}">Afficher les avis</button>
+            <p>${data.description ?? "Pas de description"}</p>
+            <button type="button" data-id="${data.id}">Afficher les avis</button>
           </div>`;
-
-        // Ajouter les listeners pour les avis
-        ajoutListenersAvis();
       });
+
+      // Ajouter les listeners pour les avis
+      ajoutListenersAvis();
     }
 
     // Afficher les produits au chargement initial
@@ -41,7 +42,7 @@ async function fetchingData() {
 
     // Bouton Trier (Prix croissant)
     document.querySelector(".btn-trier").addEventListener("click", function () {
-      const datasCopies = datas.map((obj) => ({ ...obj })); //copie profonde
+      const datasCopies = datas.map((obj) => ({ ...obj })); // Copie profonde
       datasCopies.sort((a, b) => a.prix - b.prix);
       afficherProduits(datasCopies);
     });
@@ -71,7 +72,7 @@ async function fetchingData() {
         afficherProduits(filteredDatas);
       });
 
-    // fonctions affichages noms de produits abordables
+    // Fonction pour afficher les noms des produits abordables
     function produitAbordables(items) {
       const nomProduit = items.map((data) => data.nom);
       for (let i = items.length - 1; i >= 0; i--) {
@@ -79,11 +80,10 @@ async function fetchingData() {
           nomProduit.splice(i, 1);
         }
       }
-      // Vider la liste des produits abordables
-      const abordablesSection = document.querySelector(".abordables");
-      abordablesSection.innerHTML = "";
 
-      // Création de la liste d'éléments abordables
+      const abordablesSection = document.querySelector(".abordables");
+      abordablesSection.innerHTML = "<p>Pièces abordables :</p>";
+
       const listeElem = document.createElement("ul");
       for (let i = 0; i < nomProduit.length; i++) {
         const nomElem = document.createElement("li");
@@ -92,10 +92,14 @@ async function fetchingData() {
       }
       abordablesSection.appendChild(listeElem);
     }
+
     produitAbordables(datas);
   } catch (error) {
     console.error("Erreur lors du chargement des données:", error);
   }
 }
 
-fetchingData();
+// Appel de la fonction principale
+fetchingData().then(() => {
+  ajoutListenersEnvoyerAvis();
+});
