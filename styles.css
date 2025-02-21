@@ -53,3 +53,19 @@ main {
 	margin-top: 4px;
 	margin-bottom: 4px;
 }
+.produit {
+	border: 1px solid #ddd;
+	padding: 10px;
+	margin: 10px;
+	width: 250px;
+	text-align: center;
+	display: inline-block;
+	box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+  }
+  
+  .produit img {
+	width: 100%;
+	height: auto;
+	max-height: 150px;
+  }
+  
