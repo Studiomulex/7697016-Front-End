@@ -69,7 +69,7 @@ export function ajoutListenersAvis() {
 // Fonction pour envoyer un nouvel avis
 export function ajoutListenersEnvoyerAvis() {
   const formulaireAvis = document.querySelector(".formulaire-avis");
-
+4
   formulaireAvis.addEventListener("submit", async function (event) {
     event.preventDefault();
 
@@ -77,6 +77,7 @@ export function ajoutListenersEnvoyerAvis() {
       pieceId: parseInt(event.target.querySelector("[name=piece-id]").value),
       utilisateur: event.target.querySelector("[name=utilisateur]").value,
       commentaire: event.target.querySelector("[name=commentaire]").value,
+      nbEtoiles: parseInt(event.target.querySelector("[name=nbEtoiles]").value)
     };
 
     const chargeUtile = JSON.stringify(avis);
