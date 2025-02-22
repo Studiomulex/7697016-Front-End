@@ -8,6 +8,11 @@ async function fetchingData() {
       throw new Error(`HTTP Erreur: ${response.status}`);
     }
     const datas = await response.json();
+
+    // Sauvegarder les données dans le localStorage
+    window.localStorage.setItem("pieces", JSON.stringify(datas));
+
+    // Récupération de l'élément pour afficher les produits
     const listeProduits = document.querySelector(".fiches");
 
     if (!listeProduits) {
@@ -29,7 +34,9 @@ async function fetchingData() {
               data.disponibilite ? "En stock" : "Rupture de stock"
             }</p>
             <p>${data.description ?? "Pas de description"}</p>
-            <button type="button" data-id="${data.id}">Afficher les avis</button>
+            <button type="button" data-id="${
+              data.id
+            }">Afficher les commentaires</button>
           </div>`;
       });
 

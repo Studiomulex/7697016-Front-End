@@ -7,7 +7,12 @@ export async function fetchAvis(id) {
         `Erreur HTTP: ${response.status} - ${response.statusText}`
       );
     }
-    return await response.json();
+    const avis = await response.json();
+
+    // Sauvegarder les avis dans le localStorage
+    window.localStorage.setItem(`avis-${id}`, JSON.stringify(avis));
+
+    return avis;
   } catch (error) {
     console.error(`Erreur lors de la récupération des avis: ${error.message}`);
     throw error;
@@ -27,7 +32,8 @@ export function ajoutListenersAvis() {
 
       const pieceElement = event.target.parentElement;
       const avisContainer = pieceElement.querySelector(".avis");
-      // cacher les avis si ils sont affiche
+
+      // Cacher les avis s'ils sont déjà affichés
       if (avisContainer) {
         avisContainer.remove();
         button.textContent = "Afficher les commentaires";
@@ -36,7 +42,16 @@ export function ajoutListenersAvis() {
 
       try {
         const id = event.target.dataset.id;
-        const avis = await fetchAvis(id);
+
+        // Vérifier si les avis sont déjà dans le localStorage
+        const avisSauvegardes = window.localStorage.getItem(`avis-${id}`);
+        let avis;
+
+        if (avisSauvegardes) {
+          avis = JSON.parse(avisSauvegardes);
+        } else {
+          avis = await fetchAvis(id);
+        }
 
         const avisElement = document.createElement("div");
         avisElement.classList.add("avis");
@@ -69,7 +84,7 @@ export function ajoutListenersAvis() {
 // Fonction pour envoyer un nouvel avis
 export function ajoutListenersEnvoyerAvis() {
   const formulaireAvis = document.querySelector(".formulaire-avis");
-4
+
   formulaireAvis.addEventListener("submit", async function (event) {
     event.preventDefault();
 
@@ -77,7 +92,7 @@ export function ajoutListenersEnvoyerAvis() {
       pieceId: parseInt(event.target.querySelector("[name=piece-id]").value),
       utilisateur: event.target.querySelector("[name=utilisateur]").value,
       commentaire: event.target.querySelector("[name=commentaire]").value,
-      nbEtoiles: parseInt(event.target.querySelector("[name=nbEtoiles]").value)
+      nbEtoiles: parseInt(event.target.querySelector("[name=nbEtoiles]").value),
     };
 
     const chargeUtile = JSON.stringify(avis);
@@ -96,9 +111,43 @@ export function ajoutListenersEnvoyerAvis() {
       }
 
       alert("Avis envoyé avec succès !");
-      event.target.reset(); //nettoie le formulaire
+      event.target.reset(); // Nettoie le formulaire
     } catch (error) {
       console.error("Erreur lors de l'envoi de l'avis:", error);
+    }
+  });
+}
+
+// Fonction pour afficher les avis sauvegardés lors du chargement de la page
+export function afficherAvisSauvegardes() {
+  const produits = document.querySelectorAll(".fiches .produit");
+
+  produits.forEach((produit) => {
+    const id = produit.querySelector("button").dataset.id;
+    const avisSauvegardes = window.localStorage.getItem(`avis-${id}`);
+
+    if (avisSauvegardes) {
+      const avis = JSON.parse(avisSauvegardes);
+      const avisElement = document.createElement("div");
+      avisElement.classList.add("avis");
+      const avisFiltres = avis.filter(
+        (a) => (a.utilisateur || a.user) && (a.commentaire || a.comment)
+      );
+      avisElement.innerHTML =
+        avisFiltres.length > 0
+          ? avisFiltres
+              .map(
+                (a) =>
+                  `<p><strong>${
+                    a.utilisateur || a.user || "Anonyme"
+                  }</strong>: ${
+                    a.commentaire || a.comment || "Aucun commentaire"
+                  }</p>`
+              )
+              .join("")
+          : "<p>Aucun avis valide pour ce produit.</p>";
+
+      produit.appendChild(avisElement);
     }
   });
 }
